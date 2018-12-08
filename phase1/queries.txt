@@ -1,0 +1,26 @@
+val query1 = sqlContext.sql("select count(*) as count,user.location from data where user.location is not null group by user.location order by count desc");
+
+val query2 = sqlContext.sql("select count(*) as count,user.lang from data group by user.lang order by count desc");
+
+val query3 = sqlContext.sql("select max(user.friends_count) as count,user.name from data where user.verified =  true group by user.name order by count desc");
+
+val query4 = sqlContext.sql("select retweeted_status.retweet_count,user.name from data where retweeted = false and user.lang = 'en' order by retweeted_status.retweet_count desc");
+
+val query5 = sqlContext.sql("select user.name,max(user.followers_count) as followers_count,max(user.friends_count) as friends_count ,max(user.favourites_count) 
+as favourites_count,max(user.statuses_count) as statuses_count from data group by user.name order by max(user.followers_count) desc");
+
+Val query6=sqlContext.sql(“select user.location.max(user.followers_count) as followers_count from data where user.followers_count>100 group by user.location”);
+
+val query7 = sqlContext.sql("select substring(user.created_at,5,3) as month,count(*) as count from data where text like '%happy%' group by month order by count desc");
+
+val query8 = sqlContext.sql("select count(*) as count,q1.text from (select case when text like '%ellen%' then 'ellen' when text like '%bigboss%' then
+'bigboss' when text like '%Logan%' then 'logan' when text like '%marvel%' then 'marvel' when text like '%hobbit%' then 'hobbit' when text like '%petrol%' then
+'petrol' when text like '%flash%' then 'flash' else 'other data' end as text from twitterData)q1 group by q1.text")
+
+val query9 = sqlContext.sql("select q2.year,max(case when text = 'marvel' then q2.count else 0 end) as marvel,max(case when text = 'hobbit' then q2.count else
+0 end) as hobbit,max(case when text = 'ellen' then q2.count else 0 end) as ellen,max(case when text = 'logan' then q2.count else 0 end) as logan,max(case when
+text = 'other data' then q2.count else 0 end) as other from (select q1.year,q1.text,count(*) as count from (select substring(user.created_at,27,4) as year,case when
+text like '%marvel%' then 'marvel' when text like '%hobbit%' then 'hobbit' when text like '%ellen%' then 'ellen' when text like '%logan%' then 'logan' else 'other
+data' end as text from twitterData)q1 group by q1.year,q1.text)q2 where q2.year is not null group by q2.year order by q2.year desc");
+
+val query10=sqlContext.sql("select user.name,user.favourites_count from twitterData where text LIKE '%marvel%'")

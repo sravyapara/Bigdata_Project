@@ -1,0 +1,6 @@
+cd spark.tgz/bin
+spark-shell
+Val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+Import sqlContext.implicits._
+Val df=sqlContext.read.json(“home/twitterdata.json”)
+df.registerTempTable(“data”)
